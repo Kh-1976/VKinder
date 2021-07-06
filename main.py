@@ -12,6 +12,7 @@ import time
 token_group = 'token_group'
 token_vk = ''
 user_id = ''
+
 vk_session = vk_api.VkApi(token=token_group)
 longpoll = VkLongPoll(vk_session)
 
@@ -95,11 +96,20 @@ def send_photos_in_chat(owner_id):
     global id_found_user
     cnt = 0
     lst_id = func(token_group, owner_id, token_vk)
-    for id in top3_user_photos(lst_id):
-        cnt += 1
-        id_found_user = id[0]
-        send_photo(event.user_id, f'photo{id[0]}_{id[1]}')
-        write_msg(event.user_id, f'Топ-{cnt} фото пользователя  {id[0]}, лайков и комментов {id[2]}')
+    try:
+        for id in top3_user_photos(lst_id):
+            cnt += 1
+            id_found_user = id[0]
+            send_photo(event.user_id, f'photo{id[0]}_{id[1]}')
+            write_msg(event.user_id, f'Топ-{cnt} фото пользователя  {id[0]}, лайков и комментов {id[2]}')
+    except IndexError:
+        lst_id = [owner_id]
+        for id in top3_user_photos(lst_id):
+            cnt += 1
+            id_found_user = id[0]
+            send_photo(event.user_id, f'photo{id[0]}_{id[1]}')
+            write_msg(event.user_id, f'Пользователей не найденно')
+            write_msg(event.user_id, f'Топ-{cnt} фото пользователя  {id[0]}, лайков и комментов {id[2]}')
 
 
 for event in longpoll.listen():
@@ -125,7 +135,7 @@ for event in longpoll.listen():
                     else:
                         db_users[id].append(id_found_user)
                     with open(os.path.join(os.getcwd(), 'log.json'), 'a', encoding="utf-8") as f:
-                        json.dump(db_users, f)
+                        json.dump(db_users, f) #запись результатов в файл
                 else:
                     write_msg(event.user_id, "Не хватает данных. \nВведите ID пользователя VK,"
                                              " с указнымми данными: \nВозраст, Пол, Город, Семейное положение")

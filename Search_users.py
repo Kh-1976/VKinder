@@ -14,8 +14,8 @@ def func(token_group, user_id, token_vk):
         method='users.search',
         max_count=1000,
         values={
-            'age_from': int(lst_user_conditions[0]),
-            'age_to': int(lst_user_conditions[0]),
+            'age_from': int(lst_user_conditions[0])-3,
+            'age_to': int(lst_user_conditions[0])+3,
             'sex': int(lst_user_conditions[1]),
             'city': int(lst_user_conditions[2]),
             'fields': 'relation, sex, city, bdate',
@@ -23,7 +23,8 @@ def func(token_group, user_id, token_vk):
     )
     for i in rs['items']:
         try:
-            if i['city']['id'] == int(lst_user_conditions[2]) and i['relation'] == int(lst_user_conditions[3]):
+            if i['city']['id'] == int(lst_user_conditions[2]) \
+                    and i['relation'] == int(lst_user_conditions[3]):
                 lst_find_users.append(i['id'])
         except KeyError:
             continue

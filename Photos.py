@@ -28,5 +28,3 @@ class VkUserPhotos:
                 continue
         self.lst_user_photos.sort(key=itemgetter(2), reverse=True)
         return self.lst_user_photos[:3]
-
-

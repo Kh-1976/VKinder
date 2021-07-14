@@ -7,7 +7,6 @@ result = []
 
 
 def conditions(token_group, user_id):
-    result = []
     params = {'user_id': user_id, 'access_token': token_group, 'v': '5.52', 'fields':'sex,city,bdate,relation'}
     res = requests.get(url_users, params=params)
     if res.json()['response'][0]['first_name'] != 'DELETED' and 'deactivated' not in res.json()['response'][0] \
@@ -23,3 +22,4 @@ def conditions(token_group, user_id):
     else:
         result = [0, 0, 0, 0]
     return result
+
